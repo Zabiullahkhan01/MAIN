@@ -1,0 +1,63 @@
+/* Container for the list of bus cards */
+.bus-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px;
+  }
+  
+  /* Individual bus card styling */
+  .bus-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Sections of the card */
+  .card-left, .card-middle, .card-right {
+    flex: 1;
+  }
+  
+  /* Left section: text alignment */
+  .card-left {
+    text-align: left;
+  }
+  
+  /* Middle section: centered content */
+  .card-middle {
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  /* Right section: text alignment */
+  .card-right {
+    text-align: right;
+  }
+  
+  /* Styling for bus number and driver name */
+  .bus-no {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .driver-name {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+  }
+  
+  /* Styling for the arrow between source and destination */
+  .arrow {
+    margin: 0 8px;
+  }
+  
+  /* Styling for the time display */
+  .time {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  

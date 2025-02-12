@@ -1,0 +1,83 @@
+/* Reset and Box Sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Full-Page Centering */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full viewport height */
+  background-color: #f4f4f4; /* Light gray background */
+  font-family: Arial, sans-serif; /* Clean font */
+}
+
+/* Login Container Styling */
+.login-container {
+  background-color: #fff; /* White background */
+  padding: 20px 30px; /* Padding inside the container */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  text-align: center; /* Center the content */
+  width: 300px; /* Fixed width */
+}
+
+/* Form Heading */
+.login-container h2 {
+  color: #333; /* Dark gray */
+  margin-bottom: 20px; /* Space below heading */
+}
+
+/* Form Fields */
+.form-group {
+  margin-bottom: 15px; /* Space between form fields */
+  text-align: left;
+}
+
+label {
+  display: block; /* Block-level element for labels */
+  margin-bottom: 5px; /* Space below the label */
+  font-weight: bold;
+  color: #555; /* Medium gray for labels */
+}
+
+input {
+  width: 100%; /* Full width */
+  padding: 10px; /* Input padding */
+  border: 1px solid #ddd; /* Light gray border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 14px; /* Input font size */
+}
+
+/* Input Focus State */
+input:focus {
+  outline: none;
+  border-color: #4caf50; /* Green border on focus */
+}
+
+/* Submit Button */
+button {
+  width: 100%; /* Full width */
+  padding: 10px; /* Button padding */
+  background-color: #4caf50; /* Green button */
+  color: #fff; /* White text */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  cursor: pointer;
+}
+
+/* Button Hover State */
+button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Error Message */
+.error-message {
+  color: red; /* Red text for errors */
+  margin-top: 10px; /* Space above the message */
+  font-size: 14px;
+}

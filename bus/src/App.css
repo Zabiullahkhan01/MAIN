@@ -1,0 +1,161 @@
+/* Global Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f7;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Root container */
+/* Root container */
+#root {
+  display: flex;
+  height: 100vh; /* Ensures the root container takes up the full viewport height */
+  width: 100vw;  /* Ensures the root container takes up the full viewport width */
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+/* Overall layout */
+.app-container {
+  display: flex;
+  height: 100%; /* Ensures the container fills the full height of the root */
+  width: 100%;  /* Ensures the container fills the full width of the root */
+  overflow: hidden; /* Prevents unwanted scrollbars */
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px; /* Fixed width for the sidebar */
+  height: 100%;  /* Full height to match the app container */
+  background-color: #1e1e2f;
+  color: #fff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.nav-link {
+  display: block;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Main content styles */
+.main-content {
+  flex-grow: 1; /* Allows the main content to take up the remaining space */
+  background-color: #f5f5f7;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 15px;
+    box-shadow: none;
+  }
+  
+  .main-content {
+    width: 100%;
+    padding: 15px;
+  }
+}
+
+
+
+
+
+/* #root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  width:100vw;
+}
+
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #1e1e2f;
+  color: #fff;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+}
+
+.nav-link {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: #fff;
+}
+
+
+.main-content {
+  flex-grow: 1;
+  background-color: #f5f5f7;
+  overflow-y: auto;
+  width: 100vw;
+} */
