@@ -79,7 +79,21 @@ body {
   padding: 20px;
   overflow-y: auto;
 }
+.logout {
+  width: 100%;
+  padding: 0.75rem;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
+.logout:hover {
+  background: #5a67d8;
+}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

@@ -1,83 +1,99 @@
-/* Reset and Box Sizing */
-* {
+/* Global background and font */
+body {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* Full-Page Centering */
-body {
+/* Center the login card */
+.login-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full viewport height */
-  background-color: #f4f4f4; /* Light gray background */
-  font-family: Arial, sans-serif; /* Clean font */
+  height: 100vh;
 }
 
-/* Login Container Styling */
-.login-container {
-  background-color: #fff; /* White background */
-  padding: 20px 30px; /* Padding inside the container */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  text-align: center; /* Center the content */
-  width: 300px; /* Fixed width */
+/* Card styling */
+.login-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 320px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-/* Form Heading */
-.login-container h2 {
-  color: #333; /* Dark gray */
-  margin-bottom: 20px; /* Space below heading */
+/* Title and subtitle */
+.login-title {
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
 }
 
-/* Form Fields */
-.form-group {
-  margin-bottom: 15px; /* Space between form fields */
+.login-subtitle {
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+/* Input group styling */
+.input-group {
+  margin-bottom: 1rem;
   text-align: left;
 }
 
-label {
-  display: block; /* Block-level element for labels */
-  margin-bottom: 5px; /* Space below the label */
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: bold;
-  color: #555; /* Medium gray for labels */
 }
 
-input {
-  width: 100%; /* Full width */
-  padding: 10px; /* Input padding */
-  border: 1px solid #ddd; /* Light gray border */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 14px; /* Input font size */
+.input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s;
 }
 
-/* Input Focus State */
-input:focus {
+.input-group input:focus {
   outline: none;
-  border-color: #4caf50; /* Green border on focus */
+  border-color: #667eea;
 }
 
-/* Submit Button */
-button {
-  width: 100%; /* Full width */
-  padding: 10px; /* Button padding */
-  background-color: #4caf50; /* Green button */
-  color: #fff; /* White text */
-  border: none; /* Remove default border */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 16px; /* Font size */
+/* Button styling */
+.login-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
-/* Button Hover State */
-button:hover {
-  background-color: #45a049; /* Darker green on hover */
+.login-button:hover {
+  background: #5a67d8;
 }
 
-/* Error Message */
+/* Error message styling */
 .error-message {
-  color: red; /* Red text for errors */
-  margin-top: 10px; /* Space above the message */
-  font-size: 14px;
+  color: red;
+  margin-bottom: 1rem;
+}
+
+/* Footer with additional links */
+.login-footer {
+  margin-top: 1rem;
+}
+
+.login-footer a {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
 }

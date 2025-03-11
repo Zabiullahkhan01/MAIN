@@ -37,20 +37,38 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
-          <input type="text" id="username" name="username" placeholder="Enter username" required />
+    <div className="login-wrapper">
+      <div className="login-card">
+        <h2 className="login-title">Welcome Back</h2>
+        <p className="login-subtitle">Please sign in to continue</p>
+        <form onSubmit={handleSubmit}>
+          {error && <p className="error-message">{error}</p>}
+          <div className="input-group">
+            <label htmlFor="username">Username</label>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              placeholder="Enter username" 
+              required 
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              placeholder="Enter password" 
+              required 
+            />
+          </div>
+          <button type="submit" className="login-button">Login</button>
+        </form>
+        <div className="login-footer">
+          <a href="/forgot-password">Forgot password?</a>
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Enter password" required />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      </div>
     </div>
   );
 }

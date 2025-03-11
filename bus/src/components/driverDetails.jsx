@@ -3,20 +3,43 @@ import axios from 'axios';
 import '../css/driverDetail.css';
 
 function DriverCard({ driver, onCheckIn, onCheckOut }) {
-  const [checkedIn, setCheckedIn] = useState(() => {
-    return localStorage.getItem(`checkedIn_${driver.driver_id}`) === 'true';
-  });
+  
+  // Helper functions to read the stored values along with the date.
+  const getStoredCheckIn = (driverId) => {
+    const data = localStorage.getItem(`checkedIn_${driverId}`);
+    if (data) {
+      try {
+        const parsed = JSON.parse(data);
+        // Only use stored value if the date matches today.
+        return parsed.date === new Date().toDateString() ? parsed.checked : false;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  };
 
-  const [checkedOut, setCheckedOut] = useState(() => {
-    return localStorage.getItem(`checkedOut_${driver.driver_id}`) === 'true';
-  });
+  const getStoredCheckOut = (driverId) => {
+    const data = localStorage.getItem(`checkedOut_${driverId}`);
+    if (data) {
+      try {
+        const parsed = JSON.parse(data);
+        return parsed.date === new Date().toDateString() ? parsed.checked : false;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  };
 
+  const [checkedIn, setCheckedIn] = useState(() => getStoredCheckIn(driver.driver_id));
+  const [checkedOut, setCheckedOut] = useState(() => getStoredCheckOut(driver.driver_id));
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // Remove message after 3-5 seconds
+    // Remove message after 3-5 seconds.
     if (message) {
-      const timer = setTimeout(() => setMessage(""), 4000);
+      const timer = setTimeout(() => setMessage(""), 3000);
       return () => clearTimeout(timer);
     }
   }, [message]);
@@ -26,8 +49,15 @@ function DriverCard({ driver, onCheckIn, onCheckOut }) {
       .then(() => {
         setCheckedIn(true);
         setCheckedOut(false);
-        localStorage.setItem(`checkedIn_${driver.driver_id}`, "true");
-        localStorage.setItem(`checkedOut_${driver.driver_id}`, "false");
+        // Store status along with today's date.
+        localStorage.setItem(
+          `checkedIn_${driver.driver_id}`,
+          JSON.stringify({ checked: true, date: new Date().toDateString() })
+        );
+        localStorage.setItem(
+          `checkedOut_${driver.driver_id}`,
+          JSON.stringify({ checked: false, date: new Date().toDateString() })
+        );
         setMessage("Check-in successful!");
       })
       .catch((err) => {
@@ -41,7 +71,10 @@ function DriverCard({ driver, onCheckIn, onCheckOut }) {
       onCheckOut(driver.driver_id)
         .then(() => {
           setCheckedOut(true);
-          localStorage.setItem(`checkedOut_${driver.driver_id}`, "true");
+          localStorage.setItem(
+            `checkedOut_${driver.driver_id}`,
+            JSON.stringify({ checked: true, date: new Date().toDateString() })
+          );
           setMessage("Check-out successful!");
         })
         .catch((err) => {
@@ -66,6 +99,8 @@ function DriverCard({ driver, onCheckIn, onCheckOut }) {
     </div>
   );
 }
+
+//................................main........................................
 
 function DriverDetails() {
   const [drivers, setDrivers] = useState([]);

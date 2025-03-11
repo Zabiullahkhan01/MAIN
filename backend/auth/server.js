@@ -9,6 +9,8 @@ const JWT_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiZXh
 
 // Middleware
 app.use(cors());
+app.options('*', cors());
+
 // app.use(cors({
 //   origin: ['http://localhost:5173', 'https://e648-2401-4900-503e-8b59-294e-2eaa-3aee-83b8.ngrok-free.app'], 
 //   credentials: true 
@@ -113,6 +115,48 @@ app.get("/depo-master-dashboard", verifyToken, (req, res) => {
     return res.status(403).json({ message: "Access denied" });
   }
   res.json({ message: "Welcome to Depo Master Dashboard!" });
+});
+
+
+
+
+//................alerting system calls...................................................................
+//.........................................................................................................
+// Endpoint to insert a new alert
+app.post('/api/alerts', (req, res) => {
+  let { busNo, route, source, destination, message, location, time } = req.body;
+  if (!busNo || !route || !source || !destination || !message || !location || !time) {
+    return res.status(400).json({ error: 'Missing required fields.' });
+  }
+  
+  // If time is in ISO format, convert it to MySQL DATETIME format:
+  time = new Date(time).toISOString().slice(0, 19).replace('T', ' ');
+
+  const insertQuery = `
+    INSERT INTO alerts (busNo, route, \`source\`, destination, message, location, \`time\`)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  
+  db.query(insertQuery, [busNo, route, source, destination, message, location, time], (err, results) => {
+    if (err) {
+      console.error('Error inserting alert:', err);
+      return res.status(500).json({ error: 'Database insertion failed.' });
+    }
+    res.status(201).json({ message: 'Alert created successfully!', id: results.insertId });
+  });
+});
+
+
+// Endpoint to retrieve all alerts
+app.get('/api/alerts', (req, res) => {
+  const selectQuery = `SELECT * FROM alerts ORDER BY time DESC`;
+    db.query(selectQuery, (err, results) => {
+    if (err) {
+      console.error('Error fetching alerts:', err);
+      return res.status(500).json({ error: 'Database query failed.' });
+    }
+    res.json(results);
+  });
 });
 
 // Start Server
