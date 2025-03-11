@@ -1,0 +1,114 @@
+/* 1) Modal Overlay (dim background) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 2) Main Modal Box */
+.modal-content {
+  background-color: #fff;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 3) Header with Route Number */
+.route-header {
+  background-color: #160d40; /* Red header */
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* 4) Container for the vertical timeline */
+.route-stops {
+  background-color: #fff;  /* Dark background */
+  color: black;
+  position: relative;
+  /* 
+    This padding sets space around the stops.
+    We'll use 2rem at the top/bottom so the line can start/end at each circle's center.
+  */
+  padding: 2rem 1.5rem;
+}
+
+/* 4a) Single, continuous line behind all stops
+   - It starts at the center of the first circle (top)
+   - and ends at the center of the last circle (bottom).
+*/
+.route-stops::before {
+  content: "";
+  position: absolute;
+  left: 29px; /* 7px is half of the 14px circle, aligning with the circle's center */
+  top: calc(2rem + 17px);
+  bottom: calc(2rem + 17px);
+  width: 4px;
+  background-color: hwb(0 89% 7%);
+  box-shadow:#ccc;
+}
+
+/* 5) Each stop row */
+.stop {
+  display: flex;
+  align-items: center; /* ensures text is horizontally aligned with the circle */
+  position: relative;
+  /* We'll rely on spacing between consecutive stops. */
+  /* Remove default margin from the first stop if you want the circle exactly at the container's top padding. */
+  margin: 0;
+}
+
+/* Add vertical spacing between consecutive stops */
+.stop + .stop {
+  margin-top: 2rem; 
+}
+
+/* 5a) Circle for each stop */
+.circle {
+  width: 14px;
+  height: 14px;
+  background-color: #d32f2f;
+  border-radius: 50%;
+  margin-right: 10px; /* space between circle and text */
+}
+
+/* 5b) Stop info (text) */
+.stop-info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+.sub-label {
+  display: block;
+  font-size: 12px;
+  color: black;
+}
+
+/* 6) Close Button */
+.close-btn {
+  background-color: #3e6ff6e9;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  margin: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+.close-btn span {
+  color: #fff;
+}
+.close-btn:hover {
+  background-color: #4875f2e9;
+}
+
