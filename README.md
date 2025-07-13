@@ -144,7 +144,7 @@ VITE_GOOGLE_MAPS_API_KEY=your_google_api_key
 
 ## 🧠 Authors
 
-- **Zabiullah Khan**
+- **Zabiullah Khan**          # zabiullah.khan2002@gmail.com
 - **Ritik Maurya**
 - **Jitesh Bharti**
 
