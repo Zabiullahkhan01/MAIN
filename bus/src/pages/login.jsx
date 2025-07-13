@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import WeglotRefresh from "../weglot";
 import '../css/login.css';
 
 function Login() {
@@ -34,10 +35,12 @@ function Login() {
     } catch (error) {
       setError("Error logging in");
     }
+    window.location.reload();
   };
 
   return (
     <div className="login-wrapper">
+        <WeglotRefresh />
       <div className="login-card">
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Please sign in to continue</p>

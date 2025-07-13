@@ -18,13 +18,13 @@ function MapContainer({ driverLocation, route, googleMapsApiKey }) {
   useEffect(() => {
     if (driverLocation) {
       setMapCenter({
-        lat: driverLocation.latitude,
-        lng: driverLocation.longitude,
+        lat: parseFloat(driverLocation.latitude),
+        lng: parseFloat(driverLocation.longitude),
       });
-    } else if (route?.source_lat && route?.source_lng) {
+    } else if (route?.source_latitude && route?.source_longitude) {
       setMapCenter({
-        lat: parseFloat(route.source_lat),
-        lng: parseFloat(route.source_lng),
+        lat: parseFloat(route.source_latitude),
+        lng: parseFloat(route.source_longitude),
       });
     }
   }, [driverLocation, route]);
@@ -37,17 +37,29 @@ function MapContainer({ driverLocation, route, googleMapsApiKey }) {
 
     // Origin: driver's current location if available, else route's source coordinates
     const origin = driverLocation
-      ? new window.google.maps.LatLng(driverLocation.latitude, driverLocation.longitude)
-      : new window.google.maps.LatLng(parseFloat(route.source_lat), parseFloat(route.source_lng));
+      ? new window.google.maps.LatLng(
+          parseFloat(driverLocation.latitude),
+          parseFloat(driverLocation.longitude)
+        )
+      : new window.google.maps.LatLng(
+          parseFloat(route.source_latitude),
+          parseFloat(route.source_longitude)
+        );
 
-    // Destination: use the destination address string from the route.
-    const destination = route.destination;
+    // Destination: use the route's destination coordinates instead of a string.
+    const destination = new window.google.maps.LatLng(
+      parseFloat(route.destination_latitude),
+      parseFloat(route.destination_longitude)
+    );
 
     // Build waypoints from route.stops (which is now an array of stop objects)
     let waypoints = [];
     if (Array.isArray(route.stops)) {
       waypoints = route.stops.map((stop) => ({
-        location: new window.google.maps.LatLng(parseFloat(stop.stop_lat), parseFloat(stop.stop_lng)),
+        location: new window.google.maps.LatLng(
+          parseFloat(stop.stop_lat),
+          parseFloat(stop.stop_lng)
+        ),
         stopover: true,
       }));
     }

@@ -7,11 +7,20 @@ import { Routes, Route, NavLink } from "react-router-dom";
 
 function DriverDashboard() {
   const navigate = useNavigate();
+
+  //reload function
+  async function reload() {
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  }
+
   const logOut = () => {
     // window.localStorage.clear();
     // window.location.href = "/";
     localStorage.removeItem("token"); // Remove JWT Token
     navigate("/"); // Redirect to login page
+    window.location.reload();
   };
 
 
@@ -31,22 +40,29 @@ function DriverDashboard() {
     return (
       <nav className="sidebar">
         <ul>
-          <li>
+        <li>
+          <h2>Driver's   Dashboard</h2>
+          </li>
+          <hr />
+          <br />
+          {/* <li>
             <NavLink
               to="/driver-dashboard/componentFour"
               className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }
+              onClick={reload}
             >
               Component Four
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <NavLink
               to="/driver-dashboard/driverRoutes"
               className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }
+              onClick={reload}
             >
              Routes 
             </NavLink>
@@ -57,16 +73,18 @@ function DriverDashboard() {
               className={({ isActive }) =>
                 isActive ? "nav-link active" : "nav-link"
               }
+              onClick={reload}
             >
               Alert Form
             </NavLink>
           </li>
           <li>
-            <button onClick={logOut} className="logout">
-              Log Out
-            </button>
+            
           </li>
         </ul>
+        <button onClick={logOut} className="logout">
+              Log Out
+            </button>
       </nav>
     );
   };
@@ -77,8 +95,8 @@ function DriverDashboard() {
         <Sidebar />
         <div className="main-content">
           <Routes>
-            <Route path="/" element={<ComponentFour />} />
-            <Route path="/componentFour" element={<ComponentFour />} />
+            <Route path="/" element={<DriverRoutes />} />
+            {/* <Route path="/componentFour" element={<ComponentFour />} /> */}
             <Route path="/driverRoutes" element={<DriverRoutes />} />
             <Route path="/driverAlertForm" element={<DriverAlertForm />} />
           </Routes>

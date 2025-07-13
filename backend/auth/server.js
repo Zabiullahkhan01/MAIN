@@ -1,36 +1,40 @@
 const express = require("express");
-const mysql = require("mysql2");
+const { createPool } = require('mysql2');
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 const PORT = 5000;
-const JWT_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiZXhwIjoxNjk5MjM5NzUwfQ.sdx4yKpWm6dqjBhFQ9P5rPb1R6u3LgxJshQ9WxLfFqo"; // Use a secure key
-
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key"; // Keep this secret
 // Middleware
 app.use(cors());
 app.options('*', cors());
 
-// app.use(cors({
-//   origin: ['http://localhost:5173', 'https://e648-2401-4900-503e-8b59-294e-2eaa-3aee-83b8.ngrok-free.app'], 
-//   credentials: true 
-// }));
+
 app.use(express.json());
 
 // MySQL connection
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root", // Your MySQL username
-  password: "Zabi12345", // Your MySQL password
-  database: "authDB", // Your database name
+// Configure MySQL connection pool (Using Environment Variables)
+const db = createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'your_password',
+  database: process.env.DB_NAME || 'authDB',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
-db.connect((err) => {
+// Check if database connection is successful
+db.getConnection((err, connection) => {
   if (err) {
-    console.error("Error connecting to MySQL:", err);
-    return;
+    console.error('❌ Database connection failed:', err);
+    process.exit(1);
+  } else {
+    console.log('✅ Connected to MySQL database!');
+    connection.release();
   }
-  console.log("Connected to MySQL");
 });
 
 // Register User (No Password Hashing)
@@ -128,15 +132,13 @@ app.post('/api/alerts', (req, res) => {
   if (!busNo || !route || !source || !destination || !message || !location || !time) {
     return res.status(400).json({ error: 'Missing required fields.' });
   }
-  
-  // If time is in ISO format, convert it to MySQL DATETIME format:
-  time = new Date(time).toISOString().slice(0, 19).replace('T', ' ');
 
+  // Directly use the time provided by the client (already in IST)
   const insertQuery = `
     INSERT INTO alerts (busNo, route, \`source\`, destination, message, location, \`time\`)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
-  
+
   db.query(insertQuery, [busNo, route, source, destination, message, location, time], (err, results) => {
     if (err) {
       console.error('Error inserting alert:', err);

@@ -9,14 +9,14 @@ function Modal({ isOpen, onClose, route, onGo }) {
 
   // Build a list of points: source, stops (in order), and destination.
   const allPoints = [];
-  if (route.source) {
-    allPoints.push({ type: "source", name: route.source });
+  if (route.source_name) {
+    allPoints.push({ type: "source", name: route.source_name });
   }
   stopsArray.forEach((stop) => {
     allPoints.push({ type: "stop", name: stop.stop_name });
   });
-  if (route.destination) {
-    allPoints.push({ type: "destination", name: route.destination });
+  if (route.destination_name) {
+    allPoints.push({ type: "destination", name: route.destination_name });
   }
 
   const handleGoClick = () => {
@@ -28,7 +28,7 @@ function Modal({ isOpen, onClose, route, onGo }) {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         {/* Route Header */}
         <div className="route-header">
-          <span className="route-number">{route.route_name}</span>
+          <span className="route-number">{route.route_id}</span>
         </div>
 
         {/* Display route stops as a vertical timeline */}
@@ -38,8 +38,12 @@ function Modal({ isOpen, onClose, route, onGo }) {
               <div className={`circle ${point.type}`} />
               <div className="stop-info">
                 <h4>{point.name}</h4>
-                {point.type === "source" && <span className="sub-label">Start</span>}
-                {point.type === "destination" && <span className="sub-label">End</span>}
+                {point.type === "source" && (
+                  <span className="sub-label">Start</span>
+                )}
+                {point.type === "destination" && (
+                  <span className="sub-label">End</span>
+                )}
               </div>
             </div>
           ))}

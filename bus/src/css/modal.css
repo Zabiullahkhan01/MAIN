@@ -23,8 +23,10 @@
 
 /* 3) Header with Route Number */
 .route-header {
-  background-color: #160d40; /* Red header */
+  background-color: #1e1e2f;
   color: #fff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 12px;
   text-align: center;
   font-size: 18px;
@@ -95,8 +97,8 @@
 }
 
 /* 6) Close Button */
-.close-btn {
-  background-color: #3e6ff6e9;
+.go-btn {
+  background-color: #667eea;
   color: #fff;
   border: none;
   padding: 10px 16px;
@@ -105,10 +107,8 @@
   cursor: pointer;
   float: right;
 }
-.close-btn span {
-  color: #fff;
-}
-.close-btn:hover {
-  background-color: #4875f2e9;
+
+.go-btn:hover {
+  background-color: #5a67d8;
 }
 

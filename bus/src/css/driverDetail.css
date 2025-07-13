@@ -1,105 +1,174 @@
-/* driverDetail.css */
-
 /* Global Styles */
 body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f7f9fc;
-    color: #333;
-  }
-  
-  /* Container for the entire application */
-  .App {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 1rem;
-    text-align: center;
-  }
-  
-  /* Heading */
-  h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 1rem;
-  }
-  
-  /* Layout for the driver cards */
-  .driver-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-  
-  /* Each driver card */
-  .driver-card {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    overflow: hidden;
-    width: 200px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-  }
-  
-  .driver-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
-  }
-  
-  /* Driver picture styling */
-  .driver-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-    border: 3px solid #3498db;
-  }
-  
-  /* Driver details inside the card */
-  .driver-card h3 {
-    margin: 0.01rem 0;
-    font-size: 1.1rem;
-    color: #34495e;
-  }
-  
-  .driver-card p {
-    margin: 0.3rem 0;
-    font-size: 1rem;
-    color: #7f8c8d;
-  }
-  
-  /* Button styles for check in/out */
-  .driver-card button {
-    margin-top: 0.75rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #3498db;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .driver-card button:hover:not(:disabled) {
-    background-color: #2980b9;
-  }
-  
-  .driver-card button:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-  }
-  
-  /* Message feedback styling */
-  .App p {
-    font-size: 1.2rem;
-    color: #27ae60;
-    margin-bottom: 1rem;
-  }
-  
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
+}
+
+/* Container */
+.App {
+  max-width: 1200px;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Heading */
+.App h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #ddd;
+}
+
+/* Driver List */
+.driver-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+/* Driver Card */
+.driver-card {
+  position: relative;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: visible;
+  width: 200px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.driver-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+}
+
+/* Driver Picture */
+.driver-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid #3498db;
+}
+
+/* Driver Details */
+.driver-card h3 {
+  margin: 0.01rem 0;
+  font-size: 1.1rem;
+  color: #34495e;
+}
+
+.driver-card .driver-id {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+/* Button Styles */
+.driver-card button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.driver-card button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.driver-card button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* Message Styling */
+.message {
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #28a745;
+  background-color: #d4edda;
+  color: #155724;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+/* Popup Styles */
+.popup-container {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 2000;
+  background-color: #fff;
+  border: 2px solid #3498db;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 180px;
+}
+
+.popup-container p {
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.popup-container input {
+  width: 100%;
+  padding: 5px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-buttons button {
+  flex: 1;
+  margin: 0 2px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.popup-buttons button:first-child {
+  background-color: #27ae60;
+  color: #fff;
+}
+
+.popup-buttons button:first-child:hover {
+  background-color: #1e8449;
+}
+
+.popup-buttons button:last-child {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+.popup-buttons button:last-child:hover {
+  background-color: #922b21;
+}

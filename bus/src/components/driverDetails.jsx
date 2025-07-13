@@ -1,17 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../css/driverDetail.css';
+import moment from 'moment-timezone';
+import '../css/driverDetail.css'; // Ensure the CSS path is correct
 
-function DriverCard({ driver, onCheckIn, onCheckOut }) {
-  
-  // Helper functions to read the stored values along with the date.
-  const getStoredCheckIn = (driverId) => {
-    const data = localStorage.getItem(`checkedIn_${driverId}`);
+// DriverCard Component: Displays individual driver details,
+// handles check-in, check-out, and replacement logic.
+function DriverCard({ driver, onCheckIn, onCheckOut, onReplace }) {
+  // Use driver.stableId or driver.driver_id as the unique key.
+  const stableId = driver.stableId || driver.driver_id;
+
+  // Helper functions use driver-specific localStorage keys.
+  const getStoredCheckIn = (id) => {
+    const data = localStorage.getItem(`checkIn_${id}`);
+    const formattedDate = moment().tz('Asia/Kolkata').format('YYYY-MM-DD');
     if (data) {
       try {
         const parsed = JSON.parse(data);
-        // Only use stored value if the date matches today.
-        return parsed.date === new Date().toDateString() ? parsed.checked : false;
+        return parsed.date === formattedDate ? parsed.checked : false;
       } catch (e) {
         return false;
       }
@@ -19,12 +24,13 @@ function DriverCard({ driver, onCheckIn, onCheckOut }) {
     return false;
   };
 
-  const getStoredCheckOut = (driverId) => {
-    const data = localStorage.getItem(`checkedOut_${driverId}`);
+  const getStoredCheckOut = (id) => {
+    const data = localStorage.getItem(`checkOut_${id}`);
+    const formattedDate = moment().tz('Asia/Kolkata').format('YYYY-MM-DD');
     if (data) {
       try {
         const parsed = JSON.parse(data);
-        return parsed.date === new Date().toDateString() ? parsed.checked : false;
+        return parsed.date === formattedDate ? parsed.checked : false;
       } catch (e) {
         return false;
       }
@@ -32,12 +38,21 @@ function DriverCard({ driver, onCheckIn, onCheckOut }) {
     return false;
   };
 
-  const [checkedIn, setCheckedIn] = useState(() => getStoredCheckIn(driver.driver_id));
-  const [checkedOut, setCheckedOut] = useState(() => getStoredCheckOut(driver.driver_id));
+  // Local state for check-in/out and replacement popup.
+  const [checkedIn, setCheckedIn] = useState(() => getStoredCheckIn(stableId));
+  const [checkedOut, setCheckedOut] = useState(() => getStoredCheckOut(stableId));
   const [message, setMessage] = useState("");
+  const [showReplacePopup, setShowReplacePopup] = useState(false);
+  const [replacementId, setReplacementId] = useState("");
 
+  // Update check-in/out state when the driver's id changes.
   useEffect(() => {
-    // Remove message after 3-5 seconds.
+    setCheckedIn(getStoredCheckIn(driver.driver_id));
+    setCheckedOut(getStoredCheckOut(driver.driver_id));
+  }, [driver.driver_id]);
+
+  // Auto-clear messages after 3 seconds.
+  useEffect(() => {
     if (message) {
       const timer = setTimeout(() => setMessage(""), 3000);
       return () => clearTimeout(timer);
@@ -45,118 +60,236 @@ function DriverCard({ driver, onCheckIn, onCheckOut }) {
   }, [message]);
 
   const handleCheckInClick = () => {
-    onCheckIn(driver.driver_id)
+    onCheckIn(stableId)
       .then(() => {
         setCheckedIn(true);
         setCheckedOut(false);
-        // Store status along with today's date.
-        localStorage.setItem(
-          `checkedIn_${driver.driver_id}`,
-          JSON.stringify({ checked: true, date: new Date().toDateString() })
-        );
-        localStorage.setItem(
-          `checkedOut_${driver.driver_id}`,
-          JSON.stringify({ checked: false, date: new Date().toDateString() })
-        );
+        const formattedDate = moment().tz('Asia/Kolkata').format('YYYY-MM-DD');
+        localStorage.setItem(`checkIn_${stableId}`, JSON.stringify({ checked: true, date: formattedDate }));
+        localStorage.removeItem(`checkOut_${stableId}`);
         setMessage("Check-in successful!");
       })
-      .catch((err) => {
-        console.error(err);
-        setMessage("Error checking in");
-      });
+      .catch(() => setMessage("Error checking in"));
   };
 
   const handleCheckOutClick = () => {
     if (checkedIn && !checkedOut) {
-      onCheckOut(driver.driver_id)
+      onCheckOut(stableId)
         .then(() => {
           setCheckedOut(true);
-          localStorage.setItem(
-            `checkedOut_${driver.driver_id}`,
-            JSON.stringify({ checked: true, date: new Date().toDateString() })
-          );
+          const formattedDate = moment().tz('Asia/Kolkata').format('YYYY-MM-DD');
+          localStorage.setItem(`checkOut_${stableId}`, JSON.stringify({ checked: true, date: formattedDate }));
           setMessage("Check-out successful!");
         })
-        .catch((err) => {
-          console.error(err);
-          setMessage("Error checking out");
-        });
+        .catch(() => setMessage("Error checking out"));
     }
   };
 
+  const handleReplaceClick = () => {
+    setShowReplacePopup(true);
+  };
+
+  // When a replacement is confirmed, call onReplace (from parent),
+  // migrate localStorage keys, and show feedback.
+  const confirmReplacement = async () => {
+    const cleanReplacementId = replacementId.trim();
+    if (!cleanReplacementId) {
+      setShowReplacePopup(false);
+      return;
+    }
+    try {
+      const newDriver = await onReplace(stableId, cleanReplacementId);
+      // Migrate localStorage check-in/out keys from old driver id to new one.
+      const checkInData = localStorage.getItem(`checkIn_${stableId}`);
+      if (checkInData) {
+        localStorage.removeItem(`checkIn_${stableId}`);
+        localStorage.setItem(`checkIn_${newDriver.driver_id}`, checkInData);
+      }
+      const checkOutData = localStorage.getItem(`checkOut_${stableId}`);
+      if (checkOutData) {
+        localStorage.removeItem(`checkOut_${stableId}`);
+        localStorage.setItem(`checkOut_${newDriver.driver_id}`, checkOutData);
+      }
+      setMessage("Replacement successful!");
+    } catch (error) {
+      setMessage("Error replacing driver");
+    }
+    setShowReplacePopup(false);
+    setReplacementId("");
+  };
+
+  // Prepare the driver's picture URL.
+  let imgSrc = driver.picture_url;
+  if (!imgSrc.startsWith("http")) {
+    imgSrc = `http://localhost:3001/${imgSrc}`;
+  }
+  imgSrc = imgSrc.replace(/:\d+$/, '');
+
   return (
     <div className="driver-card">
-      <img src={driver.picture_url} alt={driver.name} className="driver-pic" />
+      <img src={imgSrc} alt={driver.name} className="driver-pic" />
       <h3>{driver.name}</h3>
-      <p>ID: {driver.driver_id}</p>
-      <button onClick={handleCheckInClick} disabled={checkedIn}>
-        {checkedIn ? "Checked In" : "Check In"}
-      </button>
-      <button onClick={handleCheckOutClick} disabled={!checkedIn || checkedOut}>
-        {checkedOut ? "Checked Out" : "Check Out"}
-      </button>
+      <span className="driver-id">ID: {driver.driver_id}</span>
+      {/* Render Check In and Replace buttons if not checked in */}
+      {!checkedIn && (
+        <>
+          <button onClick={handleCheckInClick}>Check In</button>
+          <button onClick={handleReplaceClick}>Replace</button>
+        </>
+      )}
+      {/* Render Check Out button if already checked in */}
+      {checkedIn && (
+        <button onClick={handleCheckOutClick} disabled={checkedOut}>
+          {checkedOut ? "Checked Out" : "Check Out"}
+        </button>
+      )}
       {message && <p className="message">{message}</p>}
+      {showReplacePopup && (
+        <div className="popup-container">
+          <input
+            type="text"
+            placeholder="New Driver ID"
+            value={replacementId}
+            onChange={(e) => setReplacementId(e.target.value)}
+          />
+          <div className="popup-buttons">
+          <button onClick={confirmReplacement}>Confirm</button>
+          <button onClick={() => setShowReplacePopup(false)}>Cancel</button>
+          </div>
+          
+        </div>
+      )}
     </div>
   );
 }
 
-//................................main........................................
-
+// DriverDetails Component: Fetches the driver list and provides handlers for check-in,
+// check-out, and replacement. It also merges persistent replacement mappings from local storage.
 function DriverDetails() {
   const [drivers, setDrivers] = useState([]);
-  const [message, setMessage] = useState("");
+  const [globalMessage, setGlobalMessage] = useState("");
+  const currentDate = moment().tz('Asia/Kolkata').format('YYYY-MM-DD');
+
+  // On mount, fetch drivers and merge replacement mapping, if available.
+  useEffect(() => {
+    // Check local storage for saved replacement mapping for today.
+    let replacementsMapping = null;
+    const storedMapping = localStorage.getItem('replacements');
+    if (storedMapping) {
+      try {
+        replacementsMapping = JSON.parse(storedMapping);
+        // Clear out stored mapping if it's not for today.
+        if (replacementsMapping.date !== currentDate) {
+          localStorage.removeItem('replacements');
+          replacementsMapping = null;
+        }
+      } catch (e) {
+        localStorage.removeItem('replacements');
+        replacementsMapping = null;
+      }
+    }
+
+    axios
+      .get('http://localhost:3001/api/drivers')
+      .then(response => {
+        const driversData = response.data.map(driver => {
+          // Use driver.driver_id as the initial stable key.
+          const stableId = driver.driver_id;
+          let updatedDriver = { ...driver, stableId };
+          // If a replacement exists for this driver, merge its details.
+          if (replacementsMapping && replacementsMapping.mapping && replacementsMapping.mapping[stableId]) {
+            const replacement = replacementsMapping.mapping[stableId];
+            updatedDriver = {
+              ...updatedDriver,
+              ...replacement,
+              driver_id: replacement.driver_id,
+              stableId: replacement.driver_id
+            };
+          }
+          return updatedDriver;
+        });
+        setDrivers(driversData);
+      })
+      .catch(() => setGlobalMessage('Error fetching drivers'));
+  }, [currentDate]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/drivers')
-      .then(response => setDrivers(response.data))
-      .catch(error => {
-        console.error('Error fetching drivers:', error);
-        setMessage('Error fetching drivers');
-      });
-  }, []);
-
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => setMessage(""), 4000);
+    if (globalMessage && globalMessage !== "Replacement successful!") {
+      const timer = setTimeout(() => setGlobalMessage(""), 4000);
       return () => clearTimeout(timer);
     }
-  }, [message]);
+  }, [globalMessage]);
 
-  const handleCheckIn = async (driverId) => {
-    try {
-      const response = await axios.post('http://localhost:3001/api/attendance/checkin', { driver_id: driverId });
-      setMessage(`Check-in successful for driver ${driverId}`);
-      return response;
-    } catch (error) {
-      console.error('Error during check-in:', error);
-      setMessage(error.response?.data?.error || 'Error during check-in');
-      return Promise.reject(error);
-    }
+  const handleCheckIn = async (id) => {
+    return axios.post('http://localhost:3001/api/attendance/checkin', { driver_id: id });
   };
 
-  const handleCheckOut = async (driverId) => {
+  const handleCheckOut = async (id) => {
+    return axios.post('http://localhost:3001/api/attendance/checkout', { driver_id: id });
+  };
+
+  // For replacement: fetch new driver details, call the replacement API endpoint,
+  // update the state, and persist the mapping in local storage.
+  const handleReplace = async (stableId, replacementId) => {
     try {
-      const response = await axios.post('http://localhost:3001/api/attendance/checkout', { driver_id: driverId });
-      setMessage(`Check-out successful for driver ${driverId}`);
-      return response;
+      const encodedId = encodeURIComponent(replacementId);
+      // Get new driver details.
+      const response = await axios.get(`http://localhost:3001/api/drivers/${encodedId}`);
+      const newDriver = response.data;
+      
+      // Call the replacement endpoint.
+      await axios.post('http://localhost:3001/api/attendance/replace', {
+        originalDriverId: stableId,
+        replacementDriverId: newDriver.driver_id
+      });
+      
+      // Update drivers state so the dashboard reflects the change.
+      setDrivers(prevDrivers =>
+        prevDrivers.map(driver =>
+          driver.stableId === stableId
+            ? { ...driver, ...newDriver, driver_id: newDriver.driver_id, stableId: newDriver.driver_id }
+            : driver
+        )
+      );
+      setGlobalMessage("Replacement successful!");
+
+      // Update local storage with the replacement mapping.
+      let replacementsMapping = { date: currentDate, mapping: {} };
+      const storedMapping = localStorage.getItem('replacements');
+      if (storedMapping) {
+        try {
+          const parsed = JSON.parse(storedMapping);
+          if (parsed.date === currentDate) {
+            replacementsMapping.mapping = { ...parsed.mapping };
+          }
+        } catch (e) {
+          // Ignore errors.
+        }
+      }
+      // Store mapping: key = original stableId, value = newDriver object.
+      replacementsMapping.mapping[stableId] = newDriver;
+      localStorage.setItem('replacements', JSON.stringify(replacementsMapping));
+      
+      return newDriver;
     } catch (error) {
-      console.error('Error during check-out:', error);
-      setMessage(error.response?.data?.error || 'Error during check-out');
-      return Promise.reject(error);
+      console.error("Error replacing driver:", error);
+      setGlobalMessage("Error replacing driver");
+      throw error;
     }
   };
 
   return (
     <div className="App">
-      <h1>Depomaster Attendance Dashboard</h1>
-      {message && <p className="message">{message}</p>}
+      <h1>Crew Attendance Dashboard</h1>
+      {globalMessage && <p className="message">{globalMessage}</p>}
       <div className="driver-list">
         {drivers.map(driver => (
-          <DriverCard 
-            key={driver.driver_id}
+          <DriverCard
+            key={driver.stableId}
             driver={driver}
             onCheckIn={handleCheckIn}
             onCheckOut={handleCheckOut}
+            onReplace={handleReplace}
           />
         ))}
       </div>
@@ -165,94 +298,3 @@ function DriverDetails() {
 }
 
 export default DriverDetails;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // const DriverDetails = () => {
-// //   return (
-// //     <div>
-// //       <h1>Component Two</h1>
-// //       <p>This is the content of Component Two.</p>
-// //     </div>
-// //   );
-// // };
-
-// // export default DriverDetails;
-// // src/App.js
-// import  { useEffect, useState } from 'react';
-// import axios from 'axios';
-// import '../css/driverDetail.css';
-
-// function DriverCard({ driver, onMarkAttendance }) {
-//   return (
-//     <div className="driver-card">
-//       <img src={driver.picture_url} alt={driver.name} className="driver-pic" />
-//       <h3>{driver.name}</h3>
-//       <p>ID: {driver.driver_id}</p>
-//       <button onClick={() => onMarkAttendance(driver.driver_id)}>Mark Attendance</button>
-//     </div>
-//   );
-// }
-
-// function DriverDetails() {
-//   const [drivers, setDrivers] = useState([]);
-//   const [message, setMessage] = useState('');
-
-//   useEffect(() => {
-//     // Fetch the driver list from the backend.
-//     axios.get('http://localhost:3001/api/drivers')
-//       .then(response => setDrivers(response.data))
-//       .catch(error => console.error('Error fetching drivers:', error));
-//   }, []);
-
-//   const handleMarkAttendance = (driverId) => {
-//     axios.post('http://localhost:3001/api/attendance', { driver_id: driverId })
-//       .then(response => {
-//         setMessage(`Attendance marked for driver ${driverId}`);
-//       })
-//       .catch(error => {
-//         console.error('Error marking attendance:', error);
-//         setMessage('Error marking attendance');
-//       });
-//   };
-
-//   return (
-//     <div className="App">
-//       <h1>Depomaster Attendance Dashboard</h1>
-//       {message && <p>{message}</p>}
-//       <div className="driver-list">
-//         {drivers.map(driver => (
-//           <DriverCard key={driver.driver_id} driver={driver} onMarkAttendance={handleMarkAttendance} />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default DriverDetails;

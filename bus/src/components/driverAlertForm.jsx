@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import moment from 'moment-timezone';
 import '../css/driverAlertForm.css';
 
 const DriverAlertForm = () => {
@@ -13,9 +14,10 @@ const DriverAlertForm = () => {
   const [isLocationLoading, setIsLocationLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Helper: Convert a Date to MySQL DATETIME format ("YYYY-MM-DD HH:MM:SS")
-  const formatDateTime = (date) => {
-    return date.toISOString().slice(0, 19).replace('T', ' ');
+  // Helper: Capture the current date/time in IST in MySQL DATETIME format ("YYYY-MM-DD HH:mm:ss")
+  const formatDateTimeIST = () => {
+    // Instead of passing new Date(), we let moment() get the current moment.
+    return moment().tz('Asia/Kolkata').format('YYYY-MM-DD HH:mm:ss');
   };
 
   // Automatically fetch location on mount.
@@ -47,6 +49,7 @@ const DriverAlertForm = () => {
     }
     setIsSubmitting(true);
     
+    // Capture current time in IST
     const alertData = {
       busNo,
       route,
@@ -54,7 +57,7 @@ const DriverAlertForm = () => {
       destination,
       message,
       location,
-      time: formatDateTime(new Date())
+      time: formatDateTimeIST(),
     };
 
     try {

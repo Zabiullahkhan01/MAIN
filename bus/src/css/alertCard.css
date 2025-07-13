@@ -58,6 +58,16 @@
   margin-right: 4px;
 }
 
+
+.alert-card.unread {
+  border-left: 4px solid red; /* Highlight unread alerts */
+  background-color: #fff
+}
+.alert-card.read {
+  border-left: 4px solid #ccc;
+  background-color: #f2f2f2;;
+}
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .alert-card {

@@ -10,19 +10,20 @@ function DriverRoutes() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
-
-  // State to hold the route selected for map display
   const [mapRoute, setMapRoute] = useState(null);
 
   // Replace with your actual Google Maps API key
-  const googleMapsApiKey = "AIzaSyCti1rEIcGqN142wOwA_hLG4FNMEj6ySvg";
+ const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "your_map_key";
+
 
   // Fetch routes with debounce on searchTerm
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchTerm.trim() !== "") {
         fetch(
-          `http://localhost:3001/api/routes/search?stops=${encodeURIComponent(searchTerm)}`
+          `http://localhost:3001/api/routes/search?stops=${encodeURIComponent(
+            searchTerm
+          )}`
         )
           .then((response) => response.json())
           .then((data) => {
@@ -139,25 +140,35 @@ function DriverRoutes() {
 
       <div className="card-container">
         {routes.map((route) => (
-          <div key={route.route_id} className="card" onClick={() => openModal(route)}>
-            <h2>{route.route_name}</h2>
+          <div
+            key={route.route_id}
+            className="card"
+            onClick={() => openModal(route)}
+          >
+            <h2>{route.route_id}</h2>
             <p>
-              <strong>From:</strong> {route.source}
+              <strong>From:</strong> {route.source_name}
             </p>
             <p>
-              <strong>To:</strong> {route.destination}
+              <strong>To:</strong> {route.destination_name}
             </p>
           </div>
         ))}
       </div>
 
       {/* Modal for route details */}
-      <Modal isOpen={isModalOpen} onClose={closeModal} route={selectedRoute} onGo={handleGo} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        route={selectedRoute}
+        onGo={handleGo}
+      />
     </div>
   );
 }
 
 export default DriverRoutes;
+
 
 
 

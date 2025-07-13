@@ -15,36 +15,35 @@ body {
 }
 
 /* Root container */
-/* Root container */
 #root {
   display: flex;
-  height: 100vh; /* Ensures the root container takes up the full viewport height */
-  width: 100vw;  /* Ensures the root container takes up the full viewport width */
+  height: 100vh;
+  width: 100vw;
   justify-content: center;
   align-items: center;
   margin: 0;
   padding: 0;
 }
 
-
-
-
 /* Overall layout */
 .app-container {
   display: flex;
-  height: 100%; /* Ensures the container fills the full height of the root */
-  width: 100%;  /* Ensures the container fills the full width of the root */
-  overflow: hidden; /* Prevents unwanted scrollbars */
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Sidebar styles */
 .sidebar {
-  width: 250px; /* Fixed width for the sidebar */
-  height: 100%;  /* Full height to match the app container */
+  width: 250px; 
+  height: 100%;  
   background-color: #1e1e2f;
   color: #fff;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .sidebar ul {
@@ -74,11 +73,13 @@ body {
 
 /* Main content styles */
 .main-content {
-  flex-grow: 1; /* Allows the main content to take up the remaining space */
+  flex-grow: 1; /* Takes up remaining space */
   background-color: #f5f5f7;
   padding: 20px;
   overflow-y: auto;
 }
+
+/* Logout button at the bottom of the sidebar */
 .logout {
   width: 100%;
   padding: 0.75rem;
@@ -89,6 +90,7 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
+  /* No need for positioning as flex handles placement */
 }
 
 .logout:hover {
@@ -112,6 +114,7 @@ body {
     padding: 15px;
   }
 }
+
 
 
 

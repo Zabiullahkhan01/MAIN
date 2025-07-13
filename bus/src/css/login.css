@@ -1,9 +1,26 @@
 /* Global background and font */
 body {
-  background: linear-gradient(135deg, #667eea, #764ba2);
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
+  position: relative;
+  z-index: 1; /* Ensures content appears above the pseudo-element */
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -10px;   
+  left: -10px;  
+  width: calc(100vw + 20px);
+  height: calc(100vh + 20px);
+  background-image: url(../assets/bus_bg.jpg); /* Adjust path */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0.3); 
+  background-blend-mode: darken;
+  filter: blur(8px);
+  z-index: -10; /* Slightly higher z-index */
 }
 
 /* Center the login card */
@@ -12,11 +29,12 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  position: relative; /* For the language icon's absolute positioning */
 }
 
 /* Card styling */
 .login-card {
-  background: #fff;
+  background: #f0ecec;
   padding: 2rem;
   border-radius: 8px;
   width: 320px;
@@ -96,4 +114,47 @@ body {
 
 .login-footer a:hover {
   text-decoration: underline;
+}
+
+/* Language Icon & Dropdown */
+/* Icon container in top-right corner */
+.language-icon-container {
+  position: fixed;      /* instead of absolute */
+  top: 20px;            /* adjust as needed */
+  right: 20px;          /* adjust as needed */
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* Language icon styling */
+.language-icon-container img {
+  width: 32px;
+  height: 32px;
+}
+
+/* Dropdown menu */
+.language-dropdown {
+  position: absolute;
+  top: 40px; /* Adjust if needed */
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-width: 120px;
+  z-index: 1001;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.language-dropdown li {
+  padding: 8px 16px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.3s;
+}
+
+.language-dropdown li:hover {
+  background-color: #f0f0f0;
 }

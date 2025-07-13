@@ -1,1 +1,10 @@
 .vercel
+# Ignore environment files
+.env
+backend/.env
+bus/.env
+
+# Ignore local databases
+*.sqlite
+jobs.sqlitebackend/.env
+jobs.sqlite
