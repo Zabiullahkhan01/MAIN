@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = 5000;
-const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key"; // Keep this secret
+const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key"; // Keep this secret and safe
 // Middleware
 app.use(cors());
 app.options('*', cors());
@@ -37,29 +37,6 @@ db.getConnection((err, connection) => {
   }
 });
 
-// Register User (No Password Hashing)
-// app.post("/register", (req, res) => {
-//   const { username, password, role } = req.body;
-
-//   // Default role if not provided
-//   const userRole = role || "user";
-
-//   // Insert user into database
-//   db.query(
-//     "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-//     [username, password, userRole],
-//     (err) => {
-//       if (err) {
-//         if (err.code === "ER_DUP_ENTRY") {
-//           return res.status(400).json({ message: "User already exists" });
-//         }
-//         console.error(err);
-//         return res.status(500).json({ error: "Database error" });
-//       }
-//       res.status(201).json({ message: "User registered successfully" });
-//     }
-//   );
-// });
 
 // Login Route
 app.post("/login", (req, res) => {
