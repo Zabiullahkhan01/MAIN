@@ -1,4 +1,5 @@
 # 🚌 Automated Bus Scheduling and Route Management System
+![License: Non-Commercial](https://img.shields.io/badge/license-Non--Commercial-lightgrey.svg)
 
 This project presents a **smart, scalable, and real-time bus scheduling and route management system**. It integrates artificial intelligence, MySQL databases, and real-time location tracking to optimize bus allocations, crew assignments, and scheduling operations along with efficient route management and visualiztion of route(with its stops) with the help of google map api keys
 
